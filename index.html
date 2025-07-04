@@ -250,9 +250,7 @@
         </div>
 
 
-        <div class="section-header">Elemental Damage Conversion & Resistances</div>
-
-        <div class="elemental-pair">
+        <div class="section-header">Damage Conversion & Resistances</div> <div class="elemental-pair">
             <div class="input-group">
                 <label for="physTakenFire">% Phys to Fire:</label>
                 <input type="number" id="physTakenFire" min="0" max="100" value="0">
@@ -285,11 +283,19 @@
             </div>
         </div>
 
+        <div class="elemental-pair"> <div class="input-group">
+                <label for="physTakenChaos">% Phys to Chaos:</label>
+                <input type="number" id="physTakenChaos" min="0" max="100" value="0">
+            </div>
+            <div class="input-group">
+                <label for="chaosResist">Chaos Resist (%): <span id="chaosResistValue">0</span>%</label>
+                <input type="range" id="chaosResist" min="-60" max="90" value="0"> </div>
+        </div>
         </div>
 
     <div class="output-group">
         <p>Final Damage Received: <strong id="finalDamage">0</strong></p>
-        <p> (Breakdown: <span id="finalPhysDmg">0</span> Physical, <span id="finalFireDmg">0</span> Fire, <span id="finalColdDmg">0</span> Cold, <span id="finalLightningDmg">0</span> Lightning)</p>
+        <p> (Breakdown: <span id="finalPhysDmg">0</span> Physical, <span id="finalFireDmg">0</span> Fire, <span id="finalColdDmg">0</span> Cold, <span id="finalLightningDmg">0</span> Lightning, <span id="finalChaosDmg">0</span> Chaos)</p>
     </div>
 
     <script>
@@ -302,6 +308,7 @@
         const physTakenFireInput = document.getElementById('physTakenFire');
         const physTakenColdInput = document.getElementById('physTakenCold');
         const physTakenLightningInput = document.getElementById('physTakenLightning');
+        const physTakenChaosInput = document.getElementById('physTakenChaos'); // New
         const otherPhysDRInput = document.getElementById('otherPhysDR');
         const fireResistInput = document.getElementById('fireResist');
         const fireResistValueSpan = document.getElementById('fireResistValue');
@@ -309,6 +316,8 @@
         const coldResistValueSpan = document.getElementById('coldResistValue');
         const lightningResistInput = document.getElementById('lightningResist');
         const lightningResistValueSpan = document.getElementById('lightningResistValue');
+        const chaosResistInput = document.getElementById('chaosResist'); // New
+        const chaosResistValueSpan = document.getElementById('chaosResistValue'); // New
         const armourInput = document.getElementById('armour');
         const armourPDRDisplay = document.getElementById('armourPDRDisplay');
         const finalDamageOutput = document.getElementById('finalDamage');
@@ -316,6 +325,7 @@
         const finalFireDmgSpan = document.getElementById('finalFireDmg');
         const finalColdDmgSpan = document.getElementById('finalColdDmg');
         const finalLightningDmgSpan = document.getElementById('finalLightningDmg');
+        const finalChaosDmgSpan = document.getElementById('finalChaosDmg'); // New
 
 
         function calculateDamage() {
@@ -325,29 +335,48 @@
             let physTakenFire = parseFloat(physTakenFireInput.value) || 0;
             let physTakenCold = parseFloat(physTakenColdInput.value) || 0;
             let physTakenLightning = parseFloat(physTakenLightningInput.value) || 0;
+            let physTakenChaos = parseFloat(physTakenChaosInput.value) || 0; // New
             let armour = parseFloat(armourInput.value) || 0;
             let otherPhysDR = parseFloat(otherPhysDRInput.value) || 0;
             let fireResist = parseFloat(fireResistInput.value) || 0;
             let coldResist = parseFloat(coldResistInput.value) || 0;
             let lightningResist = parseFloat(lightningResistInput.value) || 0;
+            let chaosResist = parseFloat(chaosResistInput.value) || 0; // New
 
             enduranceChargesValueSpan.textContent = enduranceCharges;
             fireResistValueSpan.textContent = fireResist;
             coldResistValueSpan.textContent = coldResist;
             lightningResistValueSpan.textContent = lightningResist;
+            chaosResistValueSpan.textContent = chaosResist; // New
+
+            // Ensure total conversion doesn't exceed 100% (optional, but good practice for PoE mechanics)
+            let totalConversionPercent = physTakenFire + physTakenCold + physTakenLightning + physTakenChaos;
+            if (totalConversionPercent > 100) {
+                let ratio = 100 / totalConversionPercent;
+                physTakenFire *= ratio;
+                physTakenCold *= ratio;
+                physTakenLightning *= ratio;
+                physTakenChaos *= ratio;
+                // Update input values to reflect the adjusted conversion percentages
+                physTakenFireInput.value = physTakenFire.toFixed(2);
+                physTakenColdInput.value = physTakenCold.toFixed(2);
+                physTakenLightningInput.value = physTakenLightning.toFixed(2);
+                physTakenChaosInput.value = physTakenChaos.toFixed(2);
+            }
 
             let damageConvertedToFire = incomingDamage * (physTakenFire / 100);
             let damageConvertedToCold = incomingDamage * (physTakenCold / 100);
             let damageConvertedToLightning = incomingDamage * (physTakenLightning / 100);
+            let damageConvertedToChaos = incomingDamage * (physTakenChaos / 100); // New
 
-            let rawPhysicalDamageAfterConversion = Math.max(0, incomingDamage - (damageConvertedToFire + damageConvertedToCold + damageConvertedToLightning));
+            let rawPhysicalDamageAfterConversion = Math.max(0, incomingDamage - (damageConvertedToFire + damageConvertedToCold + damageConvertedToLightning + damageConvertedToChaos)); // Updated
 
             let armourPDR = 0;
             if (rawPhysicalDamageAfterConversion > 0 && armour > 0) {
                 armourPDR = (armour / (armour + (10 * rawPhysicalDamageAfterConversion))) * 100;
                 armourPDR = Math.min(90, armourPDR);
             }
-            armourPDRDisplay.textContent = `PDR from Armour: ${armourPDR.toFixed(2)}% (vs ${rawPhysicalDamageAfterConversion.toFixed(0)} phys)`; /* Changed label */
+            armourPDRDisplay.textContent = `PDR from Armour: ${armourPDR.toFixed(2)}% (vs ${rawPhysicalDamageAfterConversion.toFixed(0)} phys)`;
 
             let endurancePhysDR = enduranceCharges * 4;
             let combinedPhysicalDR = armourPDR + endurancePhysDR + otherPhysDR;
@@ -362,21 +391,25 @@
             let mitigatedFireDamage = damageConvertedToFire * (1 - (fireResist / 100));
             let mitigatedColdDamage = damageConvertedToCold * (1 - (coldResist / 100));
             let mitigatedLightningDamage = damageConvertedToLightning * (1 - (lightningResist / 100));
+            let mitigatedChaosDamage = damageConvertedToChaos * (1 - (chaosResist / 100)); // New - Note: Endurance Charges do NOT affect Chaos Res
 
+            // Endurance Charges provide 4% Physical Damage Reduction per charge and 4% Elemental Resistance per charge.
+            // They do NOT provide Chaos Resistance.
             let enduranceEleDRFactor = (1 - (enduranceCharges * 0.04));
-            enduranceEleDRFactor = Math.max(0, enduranceEleDRFactor);
+            enduranceEleDRFactor = Math.max(0, enduranceEleDRFactor); // Ensure factor doesn't go below 0
 
             mitigatedFireDamage *= enduranceEleDRFactor;
             mitigatedColdDamage *= enduranceEleDRFactor;
             mitigatedLightningDamage *= enduranceEleDRFactor;
 
-            let finalDamage = effectivePhysicalDamage + mitigatedFireDamage + mitigatedColdDamage + mitigatedLightningDamage;
+            let finalDamage = effectivePhysicalDamage + mitigatedFireDamage + mitigatedColdDamage + mitigatedLightningDamage + mitigatedChaosDamage; // Updated
 
             finalDamageOutput.textContent = finalDamage.toFixed(2);
             finalPhysDmgSpan.textContent = effectivePhysicalDamage.toFixed(2);
             finalFireDmgSpan.textContent = mitigatedFireDamage.toFixed(2);
             finalColdDmgSpan.textContent = mitigatedColdDamage.toFixed(2);
             finalLightningDmgSpan.textContent = mitigatedLightningDamage.toFixed(2);
+            finalChaosDmgSpan.textContent = mitigatedChaosDamage.toFixed(2); // New
         }
 
         incomingPhysDamageInput.addEventListener('input', calculateDamage);
@@ -385,11 +418,13 @@
         physTakenFireInput.addEventListener('input', calculateDamage);
         physTakenColdInput.addEventListener('input', calculateDamage);
         physTakenLightningInput.addEventListener('input', calculateDamage);
+        physTakenChaosInput.addEventListener('input', calculateDamage); // New
         armourInput.addEventListener('input', calculateDamage);
         otherPhysDRInput.addEventListener('input', calculateDamage);
         fireResistInput.addEventListener('input', calculateDamage);
         coldResistInput.addEventListener('input', calculateDamage);
         lightningResistInput.addEventListener('input', calculateDamage);
+        chaosResistInput.addEventListener('input', calculateDamage); // New
 
         calculateDamage();
     </script>
