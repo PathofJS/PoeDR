@@ -29,7 +29,7 @@
             font-size: 1.8em;
         }
         .input-group {
-            margin-bottom: 10px;
+            margin-bottom: 10px; /* Default margin for vertical stacking */
             flex-basis: 100%;
         }
         .input-group label {
@@ -76,6 +76,36 @@
             background-color: #3a3a3a; /* Dark input background */
             color: #f0f0f0; /* Light input text */
         }
+        /* General select styling (inherited by guard skills unless overridden) */
+        .input-group select {
+            width: 100%;
+            padding: 6px 8px; /* Standard padding for selects */
+            border: 1px solid #555;
+            border-radius: 4px;
+            font-size: 15px;
+            background-color: #3a3a3a;
+            color: #f0f0f0;
+            appearance: none; /* Remove default select arrow */
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23e0e0e0%22%20d%3D%22M287%2C114.7L159.2%2C242.5c-4.5%2C4.5-10.6%2C6.7-16.8%2C6.7s-12.3-2.2-16.8-6.7L5.4%2C114.7c-9.1-9.1-9.1-23.7%2C0-32.8c9.1-9.1%2C23.7-9.1%2C32.8%2C0l110.1%2C110.1L254.2%2C81.9c9.1-9.1%2C23.7-9.1%2C32.8%2C0C296.1%2C91%2C296.1%2C105.6%2C287%2C114.7z%22%2F%3E%3C%2Fsvg%3E'); /* Custom arrow */
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            background-size: 12px;
+        }
+
+        /* Style for disabled/readonly inputs in dark mode */
+        .input-group input[readonly],
+        .input-group select[readonly] {
+            background-color: #444 !important; /* Even darker for disabled */
+            color: #999 !important; /* Greyed out text */
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        .input-group input[type="range"][readonly]::-webkit-slider-thumb {
+             background: #777 !important;
+        }
+
         .output-group {
             margin-top: 20px;
             padding: 10px;
@@ -115,26 +145,40 @@
             padding-bottom: 3px;
         }
 
-        /* Flexbox styling for paired inputs (2 per row) */
-        .elemental-pair,
+        /* Flexbox styling for paired inputs (2 per row for Physical section) - this is no longer used for phys mit */
         .physical-pair {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
             gap: 15px;
             margin-bottom: 10px;
-            background-color: #333; /* Darker background for input sections */
+            background-color: #333; /* Darker background for this row */
             padding: 10px;
             border-radius: 5px;
-            box-shadow: inset 0 0 5px rgba(0,0,0,0.1); /* Darker inset shadow */
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
         }
-        .elemental-pair .input-group,
         .physical-pair .input-group {
             margin-bottom: 0;
             flex-basis: calc(50% - 7.5px);
         }
 
-        /* New Flexbox styling for 3 inputs in a row */
+        /* Flexbox for elemental/chaos conversion pairs - now vertical */
+        .elemental-pair {
+            display: flex;
+            flex-direction: column; /* Stack children vertically */
+        }
+        .elemental-pair .input-group {
+            margin-bottom: 10px; /* Space between the 'taken as' and 'resist' inputs */
+            flex-basis: auto; /* Allow items to take natural height */
+            width: 100%; /* Ensure inputs take full width within their group */
+        }
+        /* Remove margin-bottom from the last input-group in elemental-pair */
+        .elemental-pair .input-group:last-child {
+            margin-bottom: 0;
+        }
+
+
+        /* New Flexbox styling for 3 inputs in a row - this is now replaced for guard skills */
         .three-column-row {
             display: flex;
             justify-content: space-between;
@@ -150,23 +194,193 @@
             margin-bottom: 0;
             flex-basis: calc((100% - 30px) / 3);
         }
+        /* Adjusted specifically for the guard skill active/level group */
+        .three-column-row .guard-skill-controls {
+            display: flex; /* Make this a flex container */
+            align-items: center; /* Vertically center items */
+            gap: 10px; /* Space between checkbox and select */
+            flex-basis: calc((100% - 30px) / 3);
+            margin-bottom: 0;
+        }
+        .three-column-row .guard-skill-controls select {
+            flex-grow: 1; /* Allow select to fill available space */
+            width: auto; /* Override default 100% to work with flex-grow */
+        }
+
+
         .three-column-row .input-group input[type="number"],
         .three-column-row .input-group input[type="range"] {
             width: calc(100% - 16px);
         }
 
         /* Adjust width for number inputs inside the flex items that have 2 columns */
-        .elemental-pair .input-group input[type="number"],
         .physical-pair .input-group input[type="number"] {
             width: calc(100% - 16px);
         }
+        /* Ensure inputs in the elemental-pair take full width now that they are stacked */
+        .elemental-pair .input-group input[type="number"],
+        .elemental-pair .input-group input[type="range"] {
+             width: calc(100% - 16px);
+        }
+
 
         /* Additional output for Armour's dynamic PDR */
         #armourPDRDisplay {
-            font-size: 0.8em;
+            font-size: 0.75em; /* Made font size slightly smaller */
             color: #aaa; /* Lighter grey for sub-info */
             margin-top: 3px;
+            /* Added min-height to ensure consistent space even if text is short */
+            min-height: 1.2em; /* Adjust as needed based on desired line height */
         }
+
+        /* Checkbox styling within an input group */
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-top: 5px; /* Adjust spacing as needed */
+            font-size: 0.9em;
+        }
+        .checkbox-group input[type="checkbox"] {
+            width: auto; /* Allow checkbox to take natural width */
+            margin-right: 5px;
+            transform: scale(1.2); /* Slightly larger checkbox */
+        }
+
+        /* NEW: Container for the 4 damage type groups to make them horizontal */
+        #elementalChaosGroupsContainer {
+            display: flex;
+            flex-wrap: wrap; /* Allows wrapping on smaller screens */
+            gap: 15px; /* Spacing between the four groups */
+            margin-bottom: 10px; /* Space below this whole section */
+        }
+
+        /* NEW: Styling for individual damage type groupings - now also controls width */
+        .damage-type-group {
+            background-color: #333; /* Darker background for each group */
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.1); /* Subtle inset shadow */
+            flex-basis: calc(25% - 11.25px); /* 4 items per row with 15px gap (3 gaps = 45px / 4 items) */
+            box-sizing: border-box; /* Include padding in flex-basis calculation */
+        }
+
+        /* NEW: Container for the individual Physical Mitigation "stubs" */
+        #physicalMitigationStubsContainer {
+            display: flex;
+            flex-wrap: wrap; /* Allows wrapping on smaller screens */
+            gap: 15px; /* Spacing between the stubs */
+            margin-bottom: 10px;
+        }
+
+        /* NEW: Styling for individual Physical Mitigation "stubs" */
+        .physical-mitigation-stub {
+            background-color: #333; /* Darker background for each stub */
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+            flex-basis: calc(25% - 11.25px); /* 4 items per row with 15px gap (3 gaps = 45px / 4 items) */
+            box-sizing: border-box;
+        }
+        /* Ensure input groups within this new wrapper still align as 2 columns */
+        .damage-type-group .input-group,
+        .physical-mitigation-stub .input-group {
+            /* Handled by .elemental-pair .input-group and .input-group */
+            margin-bottom: 0; /* Remove default input-group margin for these, as padding handles spacing */
+        }
+
+        /* NEW: Container for Incoming Damage and Total PDR at the very top */
+        #main-damage-info-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 20px; /* More space before next section */
+            background-color: #333;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: inset 0 0 7px rgba(0,0,0,0.2);
+        }
+        #main-damage-info-container .input-group {
+            margin-bottom: 0; /* Override default margin */
+            flex-basis: calc(50% - 7.5px); /* Two items per row */
+        }
+        #main-damage-info-container .input-group label {
+            font-size: 1.0em; /* Slightly larger labels for prominence */
+        }
+
+
+        /* NEW: Container for Guard Skill stubs */
+        #guardSkillStubsContainer {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+        /* Style for individual guard skill stub */
+        .guard-skill-stub {
+            background-color: #333;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+            flex-basis: calc(50% - 7.5px); /* Two items per row */
+            box-sizing: border-box;
+            display: flex; /* Use flexbox for internal layout */
+            flex-direction: column; /* Stack elements vertically */
+            gap: 5px; /* Space between internal elements */
+        }
+        /* Adjust specific input group within guard skill stub */
+        .guard-skill-stub .input-group {
+            margin-bottom: 0; /* Remove default margin */
+        }
+        .guard-skill-stub .guard-skill-controls {
+            display: flex;
+            align-items: center; /* Vertically center items */
+            justify-content: space-between; /* Distribute space between active/level parts */
+            gap: 10px; /* Space between checkbox-group and level elements */
+            flex-wrap: nowrap; /* Prevent wrapping on smaller screens for this specific row */
+            margin-bottom: 0; /* Remove default input-group margin */
+        }
+        .guard-skill-stub .guard-skill-controls .checkbox-group {
+            margin-top: 0;
+            flex-shrink: 0; /* Prevent checkbox-group from shrinking */
+            display: flex; /* Make checkbox-group itself a flex container */
+            align-items: center; /* Align checkbox and label */
+            gap: 5px; /* Space between checkbox input and its label */
+            font-size: 0.95em; /* Explicit font size for consistency */
+        }
+        .guard-skill-stub .guard-skill-controls label[for^="moltenShellLevel"],
+        .guard-skill-stub .guard-skill-controls label[for^="immortalCallLevel"] {
+            margin-bottom: 0;
+            white-space: nowrap; /* Prevent "Level:" from wrapping */
+            flex-shrink: 0; /* Prevent "Level:" label from shrinking */
+            font-size: 0.95em; /* Explicit font size for consistency */
+            padding-left: 5px; /* Added padding-left to give some space */
+        }
+        .guard-skill-stub .guard-skill-controls select {
+            flex-grow: 1; /* Allow select to fill remaining space */
+            width: auto; /* Override default 100% to work with flex-grow */
+            max-width: 100px; /* Adjusted to give more space for the arrow */
+            font-size: 0.95em; /* Explicit font size for consistency */
+            /* Removed height and line-height, using padding for visual height */
+            padding: 5px 8px; /* Adjusted padding to control visual height, allowing space for arrow */
+        }
+
+        /* New styling for the rows containing the stat values within guard skills */
+        .guard-skill-stats-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px; /* Space between the two input groups */
+            width: 100%; /* Take full width of the parent stub */
+        }
+
+        .guard-skill-stats-row .input-group {
+            flex-basis: calc(50% - 5px); /* Two items per row with gap */
+            margin-bottom: 0; /* Remove default input-group margin */
+        }
+
+        .guard-skill-stats-row .input-group input[type="number"] {
+            width: calc(100% - 16px); /* Adjust width to fit within new flex-basis */
+        }
+
 
         /* Media Queries for Mobile Responsiveness */
         @media (max-width: 768px) {
@@ -187,29 +401,82 @@
                 font-size: 0.9em;
             }
             .input-group input[type="number"],
-            .input-group input[type="range"] {
+            .input-group input[type="range"],
+            .input-group select {
                 font-size: 14px;
             }
 
+            /* Adjust flex direction and basis for mobile */
             .elemental-pair,
             .physical-pair,
-            .three-column-row {
+            .three-column-row, /* This rule is mostly obsolete now but kept for safety */
+            #elementalChaosGroupsContainer,
+            #physicalMitigationStubsContainer,
+            #main-damage-info-container,
+            #guardSkillStubsContainer
+            {
                 flex-direction: column;
                 gap: 10px;
                 padding: 10px;
             }
             .elemental-pair .input-group,
             .physical-pair .input-group,
-            .three-column-row .input-group {
+            .three-column-row .input-group, /* This rule is mostly obsolete now but kept for safety */
+            .damage-type-group,
+            .physical-mitigation-stub,
+            #main-damage-info-container .input-group,
+            .guard-skill-stub
+            {
                 flex-basis: 100%;
-                margin-bottom: 0;
+                margin-bottom: 0; /* No extra margin, let gap handle it */
             }
+            /* Specific adjustment for guard skill controls on mobile */
+            .guard-skill-stub .guard-skill-controls {
+                flex-direction: row; /* Keep them in a row on mobile */
+                flex-wrap: wrap; /* Allow wrapping of the whole control group if space is very limited */
+                align-items: center; /* Center items vertically */
+                justify-content: space-between; /* Space out items if they wrap */
+                gap: 5px; /* Reduce gap on mobile */
+            }
+            .guard-skill-stub .guard-skill-controls .checkbox-group {
+                flex-basis: auto; /* Allow natural width */
+                min-width: unset; /* Remove any minimum width if set elsewhere */
+                font-size: 0.9em; /* Slightly smaller font for mobile */
+            }
+            .guard-skill-stub .guard-skill-controls select {
+                flex-grow: 1;
+                width: auto;
+                max-width: none; /* Remove max-width on mobile to allow it to expand more */
+                font-size: 0.9em; /* Slightly smaller font for mobile */
+                padding: 4px 6px; /* Adjusted padding for mobile */
+            }
+            .guard-skill-stub .guard-skill-controls label[for^="moltenShellLevel"],
+            .guard-skill-stub .guard-skill-controls label[for^="immortalCallLevel"] {
+                flex-shrink: 0;
+                font-size: 0.9em; /* Slightly smaller font for mobile */
+                padding-left: 0; /* Remove padding-left on mobile if space is tight */
+            }
+            /* Adjustments for mobile responsiveness on guard skill stats rows */
+            .guard-skill-stats-row {
+                flex-direction: column; /* Stack them vertically on mobile */
+                gap: 5px; /* Reduce gap on mobile */
+            }
+            .guard-skill-stats-row .input-group {
+                flex-basis: 100%; /* Each takes full width on mobile */
+            }
+
             .output-group {
                 padding: 8px;
                 font-size: 0.9em;
             }
             .output-group strong {
                 font-size: 1.2em;
+            }
+            /* Re-add margin for visual separation if gap isn't enough on mobile for stubs */
+            .damage-type-group,
+            .physical-mitigation-stub,
+            .guard-skill-stub {
+                margin-bottom: 10px;
             }
         }
     </style>
@@ -218,99 +485,164 @@
     <div class="container">
         <h1>Path of Exile Physical Damage Reduction Calculator</h1>
 
-        <div class="section-header">Incoming Damage & Physical Mitigation</div>
-
-        <div class="input-group">
-            <label for="incomingPhysDamage">Incoming Physical Damage:</label>
-            <input type="number" id="incomingPhysDamage" min="0" value="1000">
-        </div>
-
-        <div class="physical-pair">
+        <div id="main-damage-info-container">
             <div class="input-group">
-                <label for="armour">Armour:</label>
-                <input type="number" id="armour" min="0" value="0">
-                <div id="armourPDRDisplay"></div>
+                <label for="incomingPhysDamage">Incoming Physical Damage:</label>
+                <input type="number" id="incomingPhysDamage" min="0" value="1000">
             </div>
             <div class="input-group">
-                <label for="totalPhysDR">Total Physical DR (%): <span id="totalPhysDRValue">0</span>%</label>
-                <input type="range" id="totalPhysDR" min="0" max="90" value="0" readonly>
+                <label for="totalPhysDR">Total Physical DR (%):</label>
+                <input type="number" id="totalPhysDR" min="0" max="90" value="0" readonly>
             </div>
         </div>
+        
+        <div class="section-header">Physical Mitigation Details</div>
 
-        <div class="three-column-row">
-            <div class="input-group">
-                <label for="otherPhysDR">Other Phys DR (%):</label>
-                <input type="number" id="otherPhysDR" min="0" max="90" value="0">
+        <div id="physicalMitigationStubsContainer">
+            <div class="physical-mitigation-stub">
+                <div class="input-group">
+                    <label for="armour">Armour:</label>
+                    <input type="number" id="armour" min="0" value="0">
+                    <div id="armourPDRDisplay"></div>
+                </div>
             </div>
-
-            <div class="input-group">
-                <label for="enduranceCharges">Endurance Charges: <span id="enduranceChargesValue">0</span></label>
-                <input type="range" id="enduranceCharges" min="0" max="12" value="0">
+            <div class="physical-mitigation-stub">
+                <div class="input-group">
+                    <label for="physDRGearMods">Phys DR Gear Mods (%):</label>
+                    <input type="number" id="physDRGearMods" min="0" max="90" value="0">
+                </div>
             </div>
-
-            <div class="input-group">
-                <label for="flatPhysTaken">Flat Phys Taken:</label>
-                <input type="number" id="flatPhysTaken" min="0" value="0">
+            <div class="physical-mitigation-stub">
+                <div class="input-group">
+                    <label for="enduranceCharges">Endurance Charges: <span id="enduranceChargesValue">0</span></label>
+                    <input type="range" id="enduranceCharges" min="0" max="12" value="0">
+                </div>
+            </div>
+            <div class="physical-mitigation-stub">
+                <div class="input-group">
+                    <label for="flatPhysTaken">Minus Flat Phys Taken:</label>
+                    <input type="number" id="flatPhysTaken" min="0" value="0">
+                </div>
             </div>
         </div>
-
-
+        
         <div class="section-header">Damage Conversion & Resistances</div>
 
-        <div class="elemental-pair">
-            <div class="input-group">
-                <label for="physTakenFire">% Phys to Fire:</label>
-                <input type="number" id="physTakenFire" min="0" max="100" value="0">
+        <div id="elementalChaosGroupsContainer">
+            <div class="damage-type-group">
+                <div class="elemental-pair">
+                    <div class="input-group">
+                        <label for="physTakenFire">% Phys to Fire:</label>
+                        <input type="number" id="physTakenFire" min="0" max="100" value="0">
+                    </div>
+                    <div class="input-group">
+                        <label for="fireResist">Fire Resist (%): <span id="fireResistValue">75</span>%</label>
+                        <input type="range" id="fireResist" min="0" max="90" value="75">
+                    </div>
+                </div>
             </div>
-            <div class="input-group">
-                <label for="fireResist">Fire Resist (%): <span id="fireResistValue">75</span>%</label>
-                <input type="range" id="fireResist" min="0" max="90" value="75">
+
+            <div class="damage-type-group">
+                <div class="elemental-pair">
+                    <div class="input-group">
+                        <label for="physTakenCold">% Phys to Cold:</label>
+                        <input type="number" id="physTakenCold" min="0" max="100" value="0">
+                    </div>
+                    <div class="input-group">
+                        <label for="coldResist">Cold Resist (%): <span id="coldResistValue">75</span>%</label>
+                        <input type="range" id="coldResist" min="0" max="90" value="75">
+                    </div>
+                </div>
+            </div>
+
+            <div class="damage-type-group">
+                <div class="elemental-pair">
+                    <div class="input-group">
+                        <label for="physTakenLightning">% Phys to Lightning:</label>
+                        <input type="number" id="physTakenLightning" min="0" max="100" value="0">
+                    </div>
+                    <div class="input-group">
+                        <label for="lightningResist">Lightning Resist (%): <span id="lightningResistValue">75</span>%</label>
+                        <input type="range" id="lightningResist" min="0" max="90" value="75">
+                    </div>
+                </div>
+            </div>
+
+            <div class="damage-type-group">
+                <div class="elemental-pair">
+                    <div class="input-group">
+                        <label for="physTakenChaos">% Phys to Chaos:</label>
+                        <input type="number" id="physTakenChaos" min="0" max="100" value="0">
+                    </div>
+                    <div class="input-group">
+                        <label for="chaosResist">Chaos Resist (%): <span id="chaosResistValue">0</span>%</label>
+                        <input type="range" id="chaosResist" min="-60" max="90" value="0">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="chaosInoculation">
+                            <label for="chaosInoculation">Chaos Inoculation</label>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+        
+        <div class="section-header">Guard Skills</div>
 
-        <div class="elemental-pair">
-            <div class="input-group">
-                <label for="physTakenCold">% Phys to Cold:</label>
-                <input type="number" id="physTakenCold" min="0" max="100" value="0">
+        <div id="guardSkillStubsContainer">
+            <div class="guard-skill-stub">
+                <div class="guard-skill-controls input-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="moltenShellActive">
+                        <label for="moltenShellActive">Molten Shell Active</label>
+                    </div>
+                    <label for="moltenShellLevel" style="margin-bottom:0;">Level:</label>
+                    <select id="moltenShellLevel">
+                        </select>
+                </div>
+                <div class="guard-skill-stats-row">
+                    <div class="input-group">
+                        <label for="moltenShellAddedArmour">MS Added Armour:</label>
+                        <input type="number" id="moltenShellAddedArmour" min="0" value="0" readonly>
+                    </div>
+                    <div class="input-group">
+                        <label for="moltenShellAbsorptionRate">MS % Absorbed:</label>
+                        <input type="number" id="moltenShellAbsorptionRate" min="0" max="100" value="0" readonly>
+                    </div>
+                </div>
             </div>
-            <div class="input-group">
-                <label for="coldResist">Cold Resist (%): <span id="coldResistValue">75</span>%</label>
-                <input type="range" id="coldResist" min="0" max="90" value="75">
+
+            <div class="guard-skill-stub">
+                <div class="guard-skill-controls input-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="immortalCallActive">
+                        <label for="immortalCallActive">Immortal Call Active</label>
+                    </div>
+                    <label for="immortalCallLevel" style="margin-bottom:0;">Level:</label>
+                    <select id="immortalCallLevel">
+                        </select>
+                </div>
+                <div class="guard-skill-stats-row">
+                    <div class="input-group">
+                        <label for="immortalCallPhysDR">IC Phys DR (%):</label>
+                        <input type="number" id="immortalCallPhysDR" min="0" max="100" value="0" readonly>
+                    </div>
+                    <div class="input-group">
+                        <label for="immortalCallEleDR">IC Ele DR (%):</label>
+                        <input type="number" id="immortalCallEleDR" min="0" max="100" value="0" readonly>
+                    </div>
+                </div>
             </div>
         </div>
-
-        <div class="elemental-pair">
-            <div class="input-group">
-                <label for="physTakenLightning">% Phys to Lightning:</label>
-                <input type="number" id="physTakenLightning" min="0" max="100" value="0">
-            </div>
-            <div class="input-group">
-                <label for="lightningResist">Lightning Resist (%): <span id="lightningResistValue">75</span>%</label>
-                <input type="range" id="lightningResist" min="0" max="90" value="75">
-            </div>
         </div>
-
-        <div class="elemental-pair">
-            <div class="input-group">
-                <label for="physTakenChaos">% Phys to Chaos:</label>
-                <input type="number" id="physTakenChaos" min="0" max="100" value="0">
-            </div>
-            <div class="input-group">
-                <label for="chaosResist">Chaos Resist (%): <span id="chaosResistValue">0</span>%</label>
-                <input type="range" id="chaosResist" min="-60" max="90" value="0">
-            </div>
-        </div>
-
-    </div>
 
     <div class="output-group">
         <p>Final Damage Received: <strong id="finalDamage">0</strong></p>
         <p> (Breakdown: <span id="finalPhysDmg">0</span> Physical, <span id="finalFireDmg">0</span> Fire, <span id="finalColdDmg">0</span> Cold, <span id="finalLightningDmg">0</span> Lightning, <span id="finalChaosDmg">0</span> Chaos)</p>
+        <p id="moltenShellTakenOutput" style="font-size:0.8em; color:#d0d0d0;"></p>
     </div>
 
     <script>
-        const totalPhysDRDisplayInput = document.getElementById('totalPhysDR');
-        const totalPhysDRValueSpan = document.getElementById('totalPhysDRValue');
+        const totalPhysDRInput = document.getElementById('totalPhysDR');
         const incomingPhysDamageInput = document.getElementById('incomingPhysDamage');
         const enduranceChargesInput = document.getElementById('enduranceCharges');
         const enduranceChargesValueSpan = document.getElementById('enduranceChargesValue');
@@ -319,7 +651,8 @@
         const physTakenColdInput = document.getElementById('physTakenCold');
         const physTakenLightningInput = document.getElementById('physTakenLightning');
         const physTakenChaosInput = document.getElementById('physTakenChaos');
-        const otherPhysDRInput = document.getElementById('otherPhysDR');
+        const chaosInoculationInput = document.getElementById('chaosInoculation');
+        const physDRGearModsInput = document.getElementById('physDRGearMods');
         const fireResistInput = document.getElementById('fireResist');
         const fireResistValueSpan = document.getElementById('fireResistValue');
         const coldResistInput = document.getElementById('coldResist');
@@ -337,6 +670,103 @@
         const finalLightningDmgSpan = document.getElementById('finalLightningDmg');
         const finalChaosDmgSpan = document.getElementById('finalChaosDmg');
 
+        // Guard Skill elements
+        const moltenShellActiveInput = document.getElementById('moltenShellActive');
+        const moltenShellLevelSelect = document.getElementById('moltenShellLevel');
+        const moltenShellAddedArmourInput = document.getElementById('moltenShellAddedArmour');
+        const moltenShellAbsorptionRateInput = document.getElementById('moltenShellAbsorptionRate');
+        const moltenShellTakenOutput = document.getElementById('moltenShellTakenOutput');
+
+        const immortalCallActiveInput = document.getElementById('immortalCallActive');
+        const immortalCallLevelSelect = document.getElementById('immortalCallLevel');
+        const immortalCallPhysDRInput = document.getElementById('immortalCallPhysDR');
+        const immortalCallEleDRInput = document.getElementById('immortalCallEleDR');
+
+
+        // Molten Shell Level Data
+        const moltenShellLevels = {
+            1: { addedArmour: 115 },
+            2: { addedArmour: 141 },
+            3: { addedArmour: 171 },
+            4: { addedArmour: 204 },
+            5: { addedArmour: 233 },
+            6: { addedArmour: 285 },
+            7: { addedArmour: 330 },
+            8: { addedArmour: 379 },
+            9: { addedArmour: 441 },
+            10: { addedArmour: 504 },
+            11: { addedArmour: 592 },
+            12: { addedArmour: 680 },
+            13: { addedArmour: 779 },
+            14: { addedArmour: 858 },
+            15: { addedArmour: 963 },
+            16: { addedArmour: 1077 },
+            17: { addedArmour: 1166 },
+            18: { addedArmour: 1254 },
+            19: { addedArmour: 1341 },
+            20: { addedArmour: 1421 }
+        };
+
+        // Immortal Call Level Data
+        const immortalCallLevels = {
+            1: { lessEle: 25, lessPhys: 25 },
+            2: { lessEle: 25, lessPhys: 26 },
+            3: { lessEle: 26, lessPhys: 26 },
+            4: { lessEle: 26, lessPhys: 27 },
+            5: { lessEle: 27, lessPhys: 27 },
+            6: { lessEle: 27, lessPhys: 28 },
+            7: { lessEle: 28, lessPhys: 28 },
+            8: { lessEle: 28, lessPhys: 29 },
+            9: { lessEle: 29, lessPhys: 29 },
+            10: { lessEle: 29, lessPhys: 30 },
+            11: { lessEle: 30, lessPhys: 30 },
+            12: { lessEle: 30, lessPhys: 31 },
+            13: { lessEle: 31, lessPhys: 31 },
+            14: { lessEle: 31, lessPhys: 32 },
+            15: { lessEle: 32, lessPhys: 32 },
+            16: { lessEle: 32, lessPhys: 33 },
+            17: { lessEle: 33, lessPhys: 33 },
+            18: { lessEle: 33, lessPhys: 34 },
+            19: { lessEle: 34, lessPhys: 34 },
+            20: { lessEle: 34, lessPhys: 35 }
+        };
+
+
+        // Populate Molten Shell Level Select
+        for (let i = 1; i <= 20; i++) {
+            const option = document.createElement('option');
+            option.value = i;
+            option.textContent = `Level ${i}`;
+            moltenShellLevelSelect.appendChild(option);
+        }
+        moltenShellLevelSelect.value = 20; // Default to max level
+
+        // Populate Immortal Call Level Select
+        for (let i = 1; i <= 20; i++) {
+            const option = document.createElement('option');
+            option.value = i;
+            option.textContent = `Level ${i}`;
+            immortalCallLevelSelect.appendChild(option);
+        }
+        immortalCallLevelSelect.value = 20; // Default to max level
+
+
+        // Function to handle mutual exclusivity of guard skills
+        function handleGuardSkillToggle(toggledSkillId) {
+            const guardSkills = [
+                { id: 'moltenShellActive', input: moltenShellActiveInput },
+                { id: 'immortalCallActive', input: immortalCallActiveInput }
+            ];
+
+            guardSkills.forEach(skill => {
+                if (skill.id !== toggledSkillId) {
+                    skill.input.checked = false;
+                }
+            });
+
+            calculateDamage();
+        }
+
 
         function calculateDamage() {
             let incomingDamage = parseFloat(incomingPhysDamageInput.value) || 0;
@@ -346,12 +776,61 @@
             let physTakenCold = parseFloat(physTakenColdInput.value) || 0;
             let physTakenLightning = parseFloat(physTakenLightningInput.value) || 0;
             let physTakenChaos = parseFloat(physTakenChaosInput.value) || 0;
-            let armour = parseFloat(armourInput.value) || 0;
-            let otherPhysDR = parseFloat(otherPhysDRInput.value) || 0;
+            let baseArmour = parseFloat(armourInput.value) || 0;
+            let physDRGearMods = parseFloat(physDRGearModsInput.value) || 0;
             let fireResist = parseFloat(fireResistInput.value) || 0;
             let coldResist = parseFloat(coldResistInput.value) || 0;
             let lightningResist = parseFloat(lightningResistInput.value) || 0;
             let chaosResist = parseFloat(chaosResistInput.value) || 0;
+
+            // Molten Shell variables
+            let moltenShellActive = moltenShellActiveInput.checked;
+            let selectedMoltenShellLevel = parseInt(moltenShellLevelSelect.value);
+            let msAddedArmour = 0;
+            let msAbsorptionRate = 0;
+
+            // Immortal Call variables
+            let immortalCallActive = immortalCallActiveInput.checked;
+            let selectedImmortalCallLevel = parseInt(immortalCallLevelSelect.value);
+            let icLessPhys = 0;
+            let icLessEle = 0;
+
+            // Update Molten Shell readonly inputs based on active status and level
+            if (moltenShellActive) {
+                const levelData = moltenShellLevels[selectedMoltenShellLevel];
+                if (levelData) {
+                    msAddedArmour = levelData.addedArmour;
+                    msAbsorptionRate = 75; // Fixed at 75% for all levels
+                }
+                moltenShellAddedArmourInput.value = msAddedArmour;
+                moltenShellAbsorptionRateInput.value = msAbsorptionRate;
+            } else {
+                moltenShellAddedArmourInput.value = 0;
+                moltenShellAbsorptionRateInput.value = 0;
+            }
+
+            // Update Immortal Call readonly inputs based on active status and level
+            if (immortalCallActive) {
+                const levelData = immortalCallLevels[selectedImmortalCallLevel];
+                if (levelData) {
+                    icLessPhys = levelData.lessPhys;
+                    icLessEle = levelData.lessEle;
+                }
+                immortalCallPhysDRInput.value = icLessPhys;
+                immortalCallEleDRInput.value = icLessEle;
+            } else {
+                immortalCallPhysDRInput.value = 0;
+                immortalCallEleDRInput.value = 0;
+            }
+
+
+            let totalDamageTakenByMoltenShell = 0;
+            let effectiveArmour = baseArmour;
+
+            // Add MS flat armour to total for PDR calculation IF MS is active
+            if (moltenShellActive) {
+                effectiveArmour += msAddedArmour;
+            }
 
             enduranceChargesValueSpan.textContent = enduranceCharges;
             fireResistValueSpan.textContent = fireResist;
@@ -359,7 +838,19 @@
             lightningResistValueSpan.textContent = lightningResist;
             chaosResistValueSpan.textContent = chaosResist;
 
-            // Ensure total conversion doesn't exceed 100% (optional, but good practice for PoE mechanics)
+            // Handle Chaos Inoculation
+            if (chaosInoculationInput.checked) {
+                chaosResistInput.readOnly = true;
+                chaosResistInput.value = 100;
+                chaosResist = 100;
+            } else {
+                chaosResistInput.readOnly = false;
+                chaosResistInput.value = parseFloat(chaosResistInput.value) || 0;
+                chaosResist = parseFloat(chaosResistInput.value) || 0;
+            }
+
+
+            // Ensure total conversion doesn't exceed 100%
             let totalConversionPercent = physTakenFire + physTakenCold + physTakenLightning + physTakenChaos;
             if (totalConversionPercent > 100) {
                 let ratio = 100 / totalConversionPercent;
@@ -367,7 +858,6 @@
                 physTakenCold *= ratio;
                 physTakenLightning *= ratio;
                 physTakenChaos *= ratio;
-                // Update input values to reflect the adjusted conversion percentages
                 physTakenFireInput.value = physTakenFire.toFixed(2);
                 physTakenColdInput.value = physTakenCold.toFixed(2);
                 physTakenLightningInput.value = physTakenLightning.toFixed(2);
@@ -382,29 +872,40 @@
             let rawPhysicalDamageAfterConversion = Math.max(0, incomingDamage - (damageConvertedToFire + damageConvertedToCold + damageConvertedToLightning + damageConvertedToChaos));
 
             let armourPDR = 0;
-            if (rawPhysicalDamageAfterConversion > 0 && armour > 0) {
-                armourPDR = (armour / (armour + (10 * rawPhysicalDamageAfterConversion))) * 100;
+            if (effectiveArmour > 0 && rawPhysicalDamageAfterConversion > 0) { // Only calculate if both are > 0
+                armourPDR = (effectiveArmour / (effectiveArmour + (10 * rawPhysicalDamageAfterConversion))) * 100;
                 armourPDR = Math.min(90, armourPDR);
             }
-            armourPDRDisplay.textContent = `PDR from Armour: ${armourPDR.toFixed(2)}% (vs ${rawPhysicalDamageAfterConversion.toFixed(0)} phys)`;
+            // Always display the PDR, even if 0, to maintain consistent height
+            armourPDRDisplay.textContent = `PDR from Armour: ${armourPDR.toFixed(2)}% (vs ${rawPhysicalDamageAfterConversion.toFixed(0)} phys, with ${effectiveArmour.toFixed(0)} effective armour)`;
+
 
             let endurancePhysDR = enduranceCharges * 4;
-            let combinedPhysicalDR = armourPDR + endurancePhysDR + otherPhysDR;
+            let combinedPhysicalDR = armourPDR + endurancePhysDR + physDRGearMods;
             combinedPhysicalDR = Math.min(90, combinedPhysicalDR);
 
-            totalPhysDRDisplayInput.value = combinedPhysicalDR;
-            totalPhysDRValueSpan.textContent = combinedPhysicalDR.toFixed(2);
+            totalPhysDRInput.value = combinedPhysicalDR.toFixed(2);
 
+
+            // Apply "less" Physical Damage from Immortal Call
             let effectivePhysicalDamage = rawPhysicalDamageAfterConversion * (1 - (combinedPhysicalDR / 100));
+            if (immortalCallActive) {
+                effectivePhysicalDamage *= (1 - (icLessPhys / 100));
+            }
             effectivePhysicalDamage = Math.max(0, effectivePhysicalDamage - flatPhysTaken);
 
             let mitigatedFireDamage = damageConvertedToFire * (1 - (fireResist / 100));
             let mitigatedColdDamage = damageConvertedToCold * (1 - (coldResist / 100));
             let mitigatedLightningDamage = damageConvertedToLightning * (1 - (lightningResist / 100));
-            let mitigatedChaosDamage = damageConvertedToChaos * (1 - (chaosResist / 100));
+            
+            let mitigatedChaosDamage;
+            if (chaosInoculationInput.checked) {
+                mitigatedChaosDamage = 0;
+            } else {
+                mitigatedChaosDamage = damageConvertedToChaos * (1 - (chaosResist / 100));
+            }
 
-            // Endurance Charges provide 4% Physical Damage Reduction per charge and 4% Elemental Resistance per charge.
-            // They do NOT provide Chaos Resistance.
+            // Endurance Charges also apply to elemental resistances (but not chaos)
             let enduranceEleDRFactor = (1 - (enduranceCharges * 0.04));
             enduranceEleDRFactor = Math.max(0, enduranceEleDRFactor);
 
@@ -412,9 +913,35 @@
             mitigatedColdDamage *= enduranceEleDRFactor;
             mitigatedLightningDamage *= enduranceEleDRFactor;
 
-            let finalDamage = effectivePhysicalDamage + mitigatedFireDamage + mitigatedColdDamage + mitigatedLightningDamage + mitigatedChaosDamage;
+            // Apply "less" Elemental Damage from Immortal Call (after resistances and endurance charge scaling)
+            if (immortalCallActive) {
+                mitigatedFireDamage *= (1 - (icLessEle / 100));
+                mitigatedColdDamage *= (1 - (icLessEle / 100));
+                mitigatedLightningDamage *= (1 - (icLessEle / 100));
+            }
 
-            finalDamageOutput.textContent = finalDamage.toFixed(2);
+            // Calculate total damage *before* Molten Shell absorption
+            let totalDamageBeforeMoltenShell = effectivePhysicalDamage + mitigatedFireDamage + mitigatedColdDamage + mitigatedLightningDamage + mitigatedChaosDamage;
+
+            let finalDamage = totalDamageBeforeMoltenShell;
+
+            // Apply Molten Shell absorption if active
+            if (moltenShellActive) {
+                const MS_MAX_CAP = 5000;
+                let msAbsorptionCap = Math.min(0.10 * effectiveArmour, MS_MAX_CAP); 
+
+                let damageMoltenShellAttemptsToAbsorb = totalDamageBeforeMoltenShell * (msAbsorptionRate / 100);
+
+                totalDamageTakenByMoltenShell = Math.min(damageMoltenShellAttemptsToAbsorb, msAbsorptionCap);
+
+                finalDamage = totalDamageBeforeMoltenShell - totalDamageTakenByMoltenShell;
+                moltenShellTakenOutput.textContent = `Molten Shell absorbed: ${totalDamageTakenByMoltenShell.toFixed(2)} damage`;
+            } else {
+                moltenShellTakenOutput.innerHTML = '&nbsp;';
+            }
+
+
+            finalDamageOutput.textContent = Math.max(0, finalDamage).toFixed(2);
             finalPhysDmgSpan.textContent = effectivePhysicalDamage.toFixed(2);
             finalFireDmgSpan.textContent = mitigatedFireDamage.toFixed(2);
             finalColdDmgSpan.textContent = mitigatedColdDamage.toFixed(2);
@@ -422,6 +949,7 @@
             finalChaosDmgSpan.textContent = mitigatedChaosDamage.toFixed(2);
         }
 
+        // Add all event listeners
         incomingPhysDamageInput.addEventListener('input', calculateDamage);
         enduranceChargesInput.addEventListener('input', calculateDamage);
         flatPhysTakenInput.addEventListener('input', calculateDamage);
@@ -429,13 +957,22 @@
         physTakenColdInput.addEventListener('input', calculateDamage);
         physTakenLightningInput.addEventListener('input', calculateDamage);
         physTakenChaosInput.addEventListener('input', calculateDamage);
+        chaosInoculationInput.addEventListener('change', calculateDamage);
         armourInput.addEventListener('input', calculateDamage);
-        otherPhysDRInput.addEventListener('input', calculateDamage);
+        physDRGearModsInput.addEventListener('input', calculateDamage);
         fireResistInput.addEventListener('input', calculateDamage);
         coldResistInput.addEventListener('input', calculateDamage);
         lightningResistInput.addEventListener('input', calculateDamage);
         chaosResistInput.addEventListener('input', calculateDamage);
 
+        // Guard Skill event listeners (with mutual exclusivity)
+        moltenShellActiveInput.addEventListener('change', () => handleGuardSkillToggle('moltenShellActive'));
+        moltenShellLevelSelect.addEventListener('change', calculateDamage);
+
+        immortalCallActiveInput.addEventListener('change', () => handleGuardSkillToggle('immortalCallActive'));
+        immortalCallLevelSelect.addEventListener('change', calculateDamage);
+
+        // Initial calculation on load
         calculateDamage();
     </script>
 </body>
