@@ -3,111 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PoE Damage Calculator</title>
+    <title>PoE Damage Calculator (Dark Mode)</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0; /* Remove default body margin */
-            background-color: #f4f4f4;
-            color: #333;
-            line-height: 1.4; /* Slightly reduce line height for compactness */
+            margin: 0;
+            background-color: #1a1a1a; /* Dark background */
+            color: #e0e0e0; /* Light text */
+            line-height: 1.4;
         }
         .container {
-            background-color: #fff;
-            padding: 15px; /* Reduced padding */
+            background-color: #2a2a2a; /* Slightly lighter dark background for container */
+            padding: 15px;
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            max-width: 960px; /* Increased max-width for PC */
-            margin: 20px auto; /* Add margin for PC view */
-            box-sizing: border-box; /* Include padding in width */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); /* Darker shadow */
+            max-width: 960px;
+            margin: 20px auto;
+            box-sizing: border-box;
         }
         h1 {
-            color: #333;
+            color: #f0f0f0; /* Lighter heading color */
             text-align: center;
-            margin-top: 10px; /* Reduced top margin */
-            margin-bottom: 20px; /* Reduced bottom margin */
-            font-size: 1.8em; /* Slightly smaller for compactness */
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 1.8em;
         }
         .input-group {
-            margin-bottom: 10px; /* Reduced margin */
+            margin-bottom: 10px;
             flex-basis: 100%;
         }
         .input-group label {
             display: block;
-            margin-bottom: 3px; /* Reduced margin */
+            margin-bottom: 3px;
             font-weight: bold;
-            font-size: 0.95em; /* Slightly smaller font for labels */
+            font-size: 0.95em;
+            color: #e0e0e0; /* Light label text */
         }
         .input-group input[type="range"] {
             width: 100%;
             -webkit-appearance: none;
-            height: 6px; /* Thinner slider */
+            height: 6px;
             border-radius: 5px;
-            background: #ddd;
+            background: #555; /* Darker range track */
             outline: none;
-            opacity: 0.7;
+            opacity: 0.8; /* Slightly less opaque */
             transition: opacity .2s;
         }
         .input-group input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            width: 18px; /* Slightly smaller thumb */
-            height: 18px; /* Slightly smaller thumb */
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
-            background: #4CAF50;
+            background: #66bb6a; /* Green thumb for good contrast */
             cursor: pointer;
         }
         .input-group input[type="range"][readonly] {
-            background: #e0e0e0;
+            background: #444; /* Darker background for readonly range */
             cursor: default;
         }
         .input-group input[type="range"][readonly]::-webkit-slider-thumb {
-            background: #888;
+            background: #777; /* Darker thumb for readonly range */
             cursor: default;
         }
 
         .input-group input[type="number"] {
-            width: calc(100% - 16px); /* Adjust width for padding */
-            padding: 6px 8px; /* Reduced padding */
-            border: 1px solid #ccc;
+            width: calc(100% - 16px);
+            padding: 6px 8px;
+            border: 1px solid #555; /* Darker border */
             border-radius: 4px;
-            font-size: 15px; /* Slightly smaller font */
+            font-size: 15px;
+            background-color: #3a3a3a; /* Dark input background */
+            color: #f0f0f0; /* Light input text */
         }
         .output-group {
-            margin-top: 20px; /* Reduced margin */
-            padding: 10px; /* Reduced padding */
-            background-color: #e9ffe9;
-            border: 1px solid #c9f0c9;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #385038; /* Darker green for output */
+            border: 1px solid #5a705a; /* Darker green border */
             border-radius: 8px;
             text-align: center;
             clear: both;
             width: 100%;
             box-sizing: border-box;
-            position: sticky; /* Make it sticky */
-            bottom: 0; /* Stick to the bottom */
-            z-index: 100; /* Ensure it's above other content */
-            border-bottom-left-radius: 0; /* Remove bottom border radius for sticky effect */
+            position: sticky;
+            bottom: 0;
+            z-index: 100;
+            border-bottom-left-radius: 0;
             border-bottom-right-radius: 0;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05); /* Shadow for sticky effect */
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2); /* Darker shadow */
+            color: #f0f0f0; /* Light text for output */
         }
         .output-group p {
-            margin: 5px 0; /* Reduced margin for paragraphs */
+            margin: 5px 0;
         }
         .output-group strong {
-            font-size: 1.3em; /* Slightly smaller font for final damage */
-            color: #28a745;
+            font-size: 1.3em;
+            color: #8bc34a; /* Lighter green for strong text */
         }
         .output-group span {
-            font-size: 0.9em; /* Smaller font for breakdown */
+            font-size: 0.9em;
+            color: #d0d0d0; /* Slightly darker light text */
         }
         .section-header {
-            margin-top: 20px; /* Reduced top margin */
-            margin-bottom: 10px; /* Reduced bottom margin */
-            font-size: 1.1em; /* Slightly smaller font */
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
             font-weight: bold;
-            color: #555;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 3px; /* Reduced padding */
+            color: #bbb; /* Lighter grey for section headers */
+            border-bottom: 1px solid #444; /* Darker border */
+            padding-bottom: 3px;
         }
 
         /* Flexbox styling for paired inputs (2 per row) */
@@ -116,17 +121,17 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            gap: 15px; /* Reduced gap */
-            margin-bottom: 10px; /* Reduced margin */
-            background-color: #eeeeee;
-            padding: 10px; /* Reduced padding */
+            gap: 15px;
+            margin-bottom: 10px;
+            background-color: #333; /* Darker background for input sections */
+            padding: 10px;
             border-radius: 5px;
-            box-shadow: inset 0 0 5px rgba(0,0,0,0.03); /* Lighter shadow */
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.1); /* Darker inset shadow */
         }
         .elemental-pair .input-group,
         .physical-pair .input-group {
             margin-bottom: 0;
-            flex-basis: calc(50% - 7.5px); /* Adjusted flex-basis for smaller gap */
+            flex-basis: calc(50% - 7.5px);
         }
 
         /* New Flexbox styling for 3 inputs in a row */
@@ -134,77 +139,77 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            gap: 15px; /* Reduced gap */
-            margin-bottom: 10px; /* Reduced margin */
-            background-color: #eeeeee;
-            padding: 10px; /* Reduced padding */
+            gap: 15px;
+            margin-bottom: 10px;
+            background-color: #333; /* Darker background for input sections */
+            padding: 10px;
             border-radius: 5px;
-            box-shadow: inset 0 0 5px rgba(0,0,0,0.03); /* Lighter shadow */
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.1); /* Darker inset shadow */
         }
         .three-column-row .input-group {
             margin-bottom: 0;
-            flex-basis: calc((100% - 30px) / 3); /* Adjusted flex-basis for smaller gap */
+            flex-basis: calc((100% - 30px) / 3);
         }
         .three-column-row .input-group input[type="number"],
         .three-column-row .input-group input[type="range"] {
-            width: calc(100% - 16px); /* Adjust width for padding */
+            width: calc(100% - 16px);
         }
 
         /* Adjust width for number inputs inside the flex items that have 2 columns */
         .elemental-pair .input-group input[type="number"],
         .physical-pair .input-group input[type="number"] {
-            width: calc(100% - 16px); /* Adjust width for padding */
+            width: calc(100% - 16px);
         }
 
         /* Additional output for Armour's dynamic PDR */
         #armourPDRDisplay {
-            font-size: 0.8em; /* Smaller font */
-            color: #666;
-            margin-top: 3px; /* Reduced margin */
+            font-size: 0.8em;
+            color: #aaa; /* Lighter grey for sub-info */
+            margin-top: 3px;
         }
 
         /* Media Queries for Mobile Responsiveness */
         @media (max-width: 768px) {
             body {
-                margin: 0; /* Remove side margins on small screens */
+                margin: 0;
             }
             .container {
-                margin: 0; /* Remove top/bottom margins on small screens */
-                border-radius: 0; /* No border-radius on full screen mobile */
-                box-shadow: none; /* No shadow on full screen mobile */
-                padding: 10px; /* Further reduced padding */
+                margin: 0;
+                border-radius: 0;
+                box-shadow: none;
+                padding: 10px;
             }
             h1 {
-                font-size: 1.5em; /* Smaller heading on mobile */
+                font-size: 1.5em;
                 margin-bottom: 15px;
             }
             .input-group label {
-                font-size: 0.9em; /* Even smaller font for labels on mobile */
+                font-size: 0.9em;
             }
             .input-group input[type="number"],
             .input-group input[type="range"] {
-                font-size: 14px; /* Smaller font size for inputs on mobile */
+                font-size: 14px;
             }
 
             .elemental-pair,
             .physical-pair,
             .three-column-row {
-                flex-direction: column; /* Stack elements vertically on mobile */
-                gap: 10px; /* Smaller gap when stacked */
-                padding: 10px; /* Consistent padding */
+                flex-direction: column;
+                gap: 10px;
+                padding: 10px;
             }
             .elemental-pair .input-group,
             .physical-pair .input-group,
             .three-column-row .input-group {
-                flex-basis: 100%; /* Take full width when stacked */
+                flex-basis: 100%;
                 margin-bottom: 0;
             }
             .output-group {
-                padding: 8px; /* Further reduced padding for output */
-                font-size: 0.9em; /* Smaller font for output on mobile */
+                padding: 8px;
+                font-size: 0.9em;
             }
             .output-group strong {
-                font-size: 1.2em; /* Adjusted strong text size */
+                font-size: 1.2em;
             }
         }
     </style>
@@ -250,7 +255,9 @@
         </div>
 
 
-        <div class="section-header">Damage Conversion & Resistances</div> <div class="elemental-pair">
+        <div class="section-header">Damage Conversion & Resistances</div>
+
+        <div class="elemental-pair">
             <div class="input-group">
                 <label for="physTakenFire">% Phys to Fire:</label>
                 <input type="number" id="physTakenFire" min="0" max="100" value="0">
@@ -283,15 +290,18 @@
             </div>
         </div>
 
-        <div class="elemental-pair"> <div class="input-group">
+        <div class="elemental-pair">
+            <div class="input-group">
                 <label for="physTakenChaos">% Phys to Chaos:</label>
                 <input type="number" id="physTakenChaos" min="0" max="100" value="0">
             </div>
             <div class="input-group">
                 <label for="chaosResist">Chaos Resist (%): <span id="chaosResistValue">0</span>%</label>
-                <input type="range" id="chaosResist" min="-60" max="90" value="0"> </div>
+                <input type="range" id="chaosResist" min="-60" max="90" value="0">
+            </div>
         </div>
-        </div>
+
+    </div>
 
     <div class="output-group">
         <p>Final Damage Received: <strong id="finalDamage">0</strong></p>
@@ -308,7 +318,7 @@
         const physTakenFireInput = document.getElementById('physTakenFire');
         const physTakenColdInput = document.getElementById('physTakenCold');
         const physTakenLightningInput = document.getElementById('physTakenLightning');
-        const physTakenChaosInput = document.getElementById('physTakenChaos'); // New
+        const physTakenChaosInput = document.getElementById('physTakenChaos');
         const otherPhysDRInput = document.getElementById('otherPhysDR');
         const fireResistInput = document.getElementById('fireResist');
         const fireResistValueSpan = document.getElementById('fireResistValue');
@@ -316,8 +326,8 @@
         const coldResistValueSpan = document.getElementById('coldResistValue');
         const lightningResistInput = document.getElementById('lightningResist');
         const lightningResistValueSpan = document.getElementById('lightningResistValue');
-        const chaosResistInput = document.getElementById('chaosResist'); // New
-        const chaosResistValueSpan = document.getElementById('chaosResistValue'); // New
+        const chaosResistInput = document.getElementById('chaosResist');
+        const chaosResistValueSpan = document.getElementById('chaosResistValue');
         const armourInput = document.getElementById('armour');
         const armourPDRDisplay = document.getElementById('armourPDRDisplay');
         const finalDamageOutput = document.getElementById('finalDamage');
@@ -325,7 +335,7 @@
         const finalFireDmgSpan = document.getElementById('finalFireDmg');
         const finalColdDmgSpan = document.getElementById('finalColdDmg');
         const finalLightningDmgSpan = document.getElementById('finalLightningDmg');
-        const finalChaosDmgSpan = document.getElementById('finalChaosDmg'); // New
+        const finalChaosDmgSpan = document.getElementById('finalChaosDmg');
 
 
         function calculateDamage() {
@@ -335,19 +345,19 @@
             let physTakenFire = parseFloat(physTakenFireInput.value) || 0;
             let physTakenCold = parseFloat(physTakenColdInput.value) || 0;
             let physTakenLightning = parseFloat(physTakenLightningInput.value) || 0;
-            let physTakenChaos = parseFloat(physTakenChaosInput.value) || 0; // New
+            let physTakenChaos = parseFloat(physTakenChaosInput.value) || 0;
             let armour = parseFloat(armourInput.value) || 0;
             let otherPhysDR = parseFloat(otherPhysDRInput.value) || 0;
             let fireResist = parseFloat(fireResistInput.value) || 0;
             let coldResist = parseFloat(coldResistInput.value) || 0;
             let lightningResist = parseFloat(lightningResistInput.value) || 0;
-            let chaosResist = parseFloat(chaosResistInput.value) || 0; // New
+            let chaosResist = parseFloat(chaosResistInput.value) || 0;
 
             enduranceChargesValueSpan.textContent = enduranceCharges;
             fireResistValueSpan.textContent = fireResist;
             coldResistValueSpan.textContent = coldResist;
             lightningResistValueSpan.textContent = lightningResist;
-            chaosResistValueSpan.textContent = chaosResist; // New
+            chaosResistValueSpan.textContent = chaosResist;
 
             // Ensure total conversion doesn't exceed 100% (optional, but good practice for PoE mechanics)
             let totalConversionPercent = physTakenFire + physTakenCold + physTakenLightning + physTakenChaos;
@@ -367,9 +377,9 @@
             let damageConvertedToFire = incomingDamage * (physTakenFire / 100);
             let damageConvertedToCold = incomingDamage * (physTakenCold / 100);
             let damageConvertedToLightning = incomingDamage * (physTakenLightning / 100);
-            let damageConvertedToChaos = incomingDamage * (physTakenChaos / 100); // New
+            let damageConvertedToChaos = incomingDamage * (physTakenChaos / 100);
 
-            let rawPhysicalDamageAfterConversion = Math.max(0, incomingDamage - (damageConvertedToFire + damageConvertedToCold + damageConvertedToLightning + damageConvertedToChaos)); // Updated
+            let rawPhysicalDamageAfterConversion = Math.max(0, incomingDamage - (damageConvertedToFire + damageConvertedToCold + damageConvertedToLightning + damageConvertedToChaos));
 
             let armourPDR = 0;
             if (rawPhysicalDamageAfterConversion > 0 && armour > 0) {
@@ -391,25 +401,25 @@
             let mitigatedFireDamage = damageConvertedToFire * (1 - (fireResist / 100));
             let mitigatedColdDamage = damageConvertedToCold * (1 - (coldResist / 100));
             let mitigatedLightningDamage = damageConvertedToLightning * (1 - (lightningResist / 100));
-            let mitigatedChaosDamage = damageConvertedToChaos * (1 - (chaosResist / 100)); // New - Note: Endurance Charges do NOT affect Chaos Res
+            let mitigatedChaosDamage = damageConvertedToChaos * (1 - (chaosResist / 100));
 
             // Endurance Charges provide 4% Physical Damage Reduction per charge and 4% Elemental Resistance per charge.
             // They do NOT provide Chaos Resistance.
             let enduranceEleDRFactor = (1 - (enduranceCharges * 0.04));
-            enduranceEleDRFactor = Math.max(0, enduranceEleDRFactor); // Ensure factor doesn't go below 0
+            enduranceEleDRFactor = Math.max(0, enduranceEleDRFactor);
 
             mitigatedFireDamage *= enduranceEleDRFactor;
             mitigatedColdDamage *= enduranceEleDRFactor;
             mitigatedLightningDamage *= enduranceEleDRFactor;
 
-            let finalDamage = effectivePhysicalDamage + mitigatedFireDamage + mitigatedColdDamage + mitigatedLightningDamage + mitigatedChaosDamage; // Updated
+            let finalDamage = effectivePhysicalDamage + mitigatedFireDamage + mitigatedColdDamage + mitigatedLightningDamage + mitigatedChaosDamage;
 
             finalDamageOutput.textContent = finalDamage.toFixed(2);
             finalPhysDmgSpan.textContent = effectivePhysicalDamage.toFixed(2);
             finalFireDmgSpan.textContent = mitigatedFireDamage.toFixed(2);
             finalColdDmgSpan.textContent = mitigatedColdDamage.toFixed(2);
             finalLightningDmgSpan.textContent = mitigatedLightningDamage.toFixed(2);
-            finalChaosDmgSpan.textContent = mitigatedChaosDamage.toFixed(2); // New
+            finalChaosDmgSpan.textContent = mitigatedChaosDamage.toFixed(2);
         }
 
         incomingPhysDamageInput.addEventListener('input', calculateDamage);
@@ -418,13 +428,13 @@
         physTakenFireInput.addEventListener('input', calculateDamage);
         physTakenColdInput.addEventListener('input', calculateDamage);
         physTakenLightningInput.addEventListener('input', calculateDamage);
-        physTakenChaosInput.addEventListener('input', calculateDamage); // New
+        physTakenChaosInput.addEventListener('input', calculateDamage);
         armourInput.addEventListener('input', calculateDamage);
         otherPhysDRInput.addEventListener('input', calculateDamage);
         fireResistInput.addEventListener('input', calculateDamage);
         coldResistInput.addEventListener('input', calculateDamage);
         lightningResistInput.addEventListener('input', calculateDamage);
-        chaosResistInput.addEventListener('input', calculateDamage); // New
+        chaosResistInput.addEventListener('input', calculateDamage);
 
         calculateDamage();
     </script>
